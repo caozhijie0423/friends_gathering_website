@@ -77,9 +77,16 @@
 - **朋友页 Avatar**：改为 `bg-indigo-500 text-white`
 - **所有页面结构更新**：首页、聚会、朋友、日记、日记详情页全部应用新布局
 
-### 🔄 下一步：移动端适配 + Toast 错误处理
+### ✅ Week 6 细节修复与交互优化
+- **聚会页"新建聚会"按钮**：加 `mt-2` 避免与 indigo banner 重合
+- **日记详情页导航栏**：移出白色容器外，加 `bg-white/15` 半透明背景，白字在任何内容下都清晰可见
+- **日记详情页新增"查看聚会"按钮**：TailAdmin 风格蓝色按钮（`PartyPopper` 图标），跳转 `/gatherings?highlight=<id>`
+- **聚会页高亮跳转**：接收 `highlight` query param，自动 `scrollIntoView` + `ring-2 ring-blue-500` 高亮 2.5 秒
+- **Supabase RLS 修复**：为 `storage.objects` 和 `photos` 表添加 anon 角色的增删改策略（之前图片上传报 RLS 错误）
+- **编辑弹窗保存 UX**：保存中显示"保存中…"禁用按钮，成功后绿色 ✓ 提示 + 1.5 秒自动关闭；新增"退出"按钮可随时手动关闭
+
+### 🔄 下一步：移动端适配
 - 移动端 Sidebar 响应式优化
-- Toast 提示完善错误处理
 
 ---
 

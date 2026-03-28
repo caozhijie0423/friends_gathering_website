@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
+import { useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -18,7 +19,7 @@ import {
 } from "@/components/ui/dialog"
 import { Calendar } from "@/components/ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { Plus, Pencil, Trash2, CalendarIcon, MapPin, Utensils, Wine, Users, X, ImagePlus } from "lucide-react"
+import { Plus, Pencil, Trash2, CalendarIcon, MapPin, Utensils, Wine, Users, X, ImagePlus, CheckCircle2 } from "lucide-react"
 import { format } from "date-fns"
 import { zhCN } from "date-fns/locale"
 import {
@@ -33,9 +34,13 @@ import {
 import type { GatheringWithParticipants, Friend, Photo } from "@/types"
 
 export default function GatheringsPage() {
+  const searchParams = useSearchParams()
   const [gatherings, setGatherings] = useState<GatheringWithParticipants[]>([])
   const [friends, setFriends] = useState<Friend[]>([])
   const [loading, setLoading] = useState(true)
+  const [highlightId, setHighlightId] = useState<string | null>(null)
+  const [saving, setSaving] = useState(false)
+  const [saveSuccess, setSaveSuccess] = useState(false)
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
@@ -63,6 +68,18 @@ export default function GatheringsPage() {
   useEffect(() => {
     loadData()
   }, [])
+
+  // 高亮并滚动到指定聚会卡片
+  useEffect(() => {
+    const id = searchParams.get("highlight")
+    if (!id || loading) return
+    setHighlightId(id)
+    setTimeout(() => {
+      const el = document.getElementById(`gathering-${id}`)
+      el?.scrollIntoView({ behavior: "smooth", block: "center" })
+    }, 100)
+    setTimeout(() => setHighlightId(null), 2500)
+  }, [searchParams, loading])
 
   async function loadData() {
     try {
@@ -147,7 +164,7 @@ export default function GatheringsPage() {
   // 更新聚会 — Step 3
   async function handleUpdateGathering() {
     if (!editingGathering) return
-
+    setSaving(true)
     try {
       await updateGathering(editingGathering.id, {
         title: formData.title,
@@ -166,12 +183,18 @@ export default function GatheringsPage() {
       for (const file of selectedFiles) {
         await uploadPhoto(editingGathering.id, file)
       }
-      setIsEditDialogOpen(false)
-      setEditingGathering(null)
-      resetForm()
+      setSaveSuccess(true)
       loadData()
+      setTimeout(() => {
+        setIsEditDialogOpen(false)
+        setEditingGathering(null)
+        resetForm()
+        setSaveSuccess(false)
+      }, 1500)
     } catch (error) {
       console.error("更新聚会失败:", error)
+    } finally {
+      setSaving(false)
     }
   }
 
@@ -268,7 +291,7 @@ export default function GatheringsPage() {
           </div>
         ) : (
           <>
-            <div className="flex justify-end">
+            <div className="flex justify-end mt-2">
               <button
                 onClick={() => setIsAddDialogOpen(true)}
                 className="inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium
@@ -284,7 +307,15 @@ export default function GatheringsPage() {
 
           <div className="grid gap-4 lg:grid-cols-2">
             {gatherings.map((gathering) => (
-              <Card key={gathering.id} className="group rounded-2xl shadow-md">
+              <Card
+                key={gathering.id}
+                id={`gathering-${gathering.id}`}
+                className={`group rounded-2xl shadow-md transition-all duration-500 ${
+                  highlightId === gathering.id
+                    ? "ring-2 ring-blue-500 ring-offset-2 shadow-lg"
+                    : ""
+                }`}
+              >
               <CardHeader className="pb-3">
                 <div className="flex items-start justify-between">
                   <div>
@@ -394,13 +425,29 @@ export default function GatheringsPage() {
             existingPhotos={existingPhotos}
             onRemoveExisting={handleRemoveExistingPhoto}
           />
-          <DialogFooter>
-            <Button variant="outline" onClick={() => { setIsEditDialogOpen(false); resetForm(); }}>
-              取消
-            </Button>
-            <Button onClick={handleUpdateGathering} disabled={!formData.title.trim()}>
-              保存
-            </Button>
+          <DialogFooter className="flex items-center gap-2 sm:justify-between">
+            <div className="flex items-center gap-2">
+              {saveSuccess && (
+                <span className="flex items-center gap-1 text-sm text-green-600 font-medium">
+                  <CheckCircle2 className="h-4 w-4" />
+                  保存成功，即将关闭…
+                </span>
+              )}
+            </div>
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                onClick={() => { setIsEditDialogOpen(false); resetForm(); setSaveSuccess(false) }}
+              >
+                退出
+              </Button>
+              <Button
+                onClick={handleUpdateGathering}
+                disabled={!formData.title.trim() || saving}
+              >
+                {saving ? "保存中…" : "保存"}
+              </Button>
+            </div>
           </DialogFooter>
         </DialogContent>
       </Dialog>

@@ -1,8 +1,8 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, use } from "react"
 import Link from "next/link"
-import { ArrowLeft, Camera, ImageOff } from "lucide-react"
+import { ArrowLeft, Camera, ImageOff, PartyPopper } from "lucide-react"
 import { format } from "date-fns"
 import { zhCN } from "date-fns/locale"
 import PageHeader from "@/components/layout/PageHeader"
@@ -12,9 +12,9 @@ import type { GatheringWithParticipants, Photo } from "@/types"
 export default function DiaryDetailPage({
   params,
 }: {
-  params: { gathering_id: string }
+  params: Promise<{ gathering_id: string }>
 }) {
-  const { gathering_id } = params
+  const { gathering_id } = use(params)
   const [gathering, setGathering] = useState<GatheringWithParticipants | null>(null)
   const [photos, setPhotos] = useState<Photo[]>([])
   const [loading, setLoading] = useState(true)
@@ -53,22 +53,35 @@ export default function DiaryDetailPage({
   return (
     <>
       <PageHeader breadcrumb="日记" title={gathering.title} />
-      <div className="px-6 py-6">
-        {/* 顶部导航 */}
-        <div className="flex items-center gap-2 mb-6">
+
+      {/* 顶部导航 - 在 indigo banner 区域内，两端布局 */}
+      <div className="px-6 pb-3 flex items-center justify-between">
+        <div className="flex items-center gap-2">
           <Link
             href="/diary"
-            className="flex items-center gap-1 text-sm text-white/80 hover:text-white transition-colors"
+            className="flex items-center gap-1 text-sm text-white/90 hover:text-white
+                       bg-white/15 hover:bg-white/25 rounded-lg px-3 py-1.5 transition-all"
           >
             <ArrowLeft className="h-4 w-4" />
             返回日记
           </Link>
-          <span className="text-white/50 text-sm">·</span>
-          <p className="text-sm text-white/70">
+          <span className="text-white/40 text-sm">·</span>
+          <p className="text-sm text-white/80">
             {format(new Date(gathering.held_at), "yyyy年M月d日 EEEE", { locale: zhCN })}
           </p>
         </div>
+        <Link
+          href={`/gatherings?highlight=${gathering_id}`}
+          className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5
+                     text-sm font-medium text-white shadow-sm
+                     hover:bg-blue-700 active:bg-blue-800 transition-colors duration-200"
+        >
+          <PartyPopper className="h-4 w-4" />
+          查看聚会
+        </Link>
+      </div>
 
+      <div className="px-6 py-4">
       {/* 照片网格 */}
       {photos.length === 0 ? (
         <div className="mt-12 text-center">
