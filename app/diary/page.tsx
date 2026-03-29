@@ -55,24 +55,27 @@ export default function DiaryPage() {
         </div>
       ) : (
         <div className="mt-6 relative">
-          {/* 时间线竖线 */}
-          <div className="absolute left-[7.5rem] top-0 bottom-0 w-px bg-gray-200" />
+          {/* 时间线竖线 - 仅桌面端显示 */}
+          <div className="hidden md:block absolute left-[7.5rem] top-0 bottom-0 w-px bg-gray-200" />
 
-          <div className="space-y-6">
+          <div className="space-y-4 md:space-y-6">
             {entries.map((entry) => (
-              <div key={entry.id} className="flex gap-6">
-                {/* 左侧日期 */}
-                <div className="w-28 flex-shrink-0 text-right pt-3">
-                  <p className="text-sm font-medium text-gray-700">
+              <div key={entry.id} className="flex flex-col md:flex-row gap-2 md:gap-6">
+                {/* 日期 - 移动端单行，桌面端双行右对齐 */}
+                <div className="md:w-28 md:flex-shrink-0 md:text-right md:pt-3">
+                  <p className="text-sm text-gray-500 md:hidden">
+                    {format(new Date(entry.gathering.held_at), "yyyy年M月d日", { locale: zhCN })}
+                  </p>
+                  <p className="hidden md:block text-sm font-medium text-gray-700">
                     {format(new Date(entry.gathering.held_at), "yyyy年", { locale: zhCN })}
                   </p>
-                  <p className="text-sm text-gray-500">
+                  <p className="hidden md:block text-sm text-gray-500">
                     {format(new Date(entry.gathering.held_at), "M月d日", { locale: zhCN })}
                   </p>
                 </div>
 
-                {/* 时间点圆圈 */}
-                <div className="relative flex-shrink-0 w-4 flex items-start pt-4">
+                {/* 时间点圆圈 - 仅桌面端显示 */}
+                <div className="relative hidden md:flex flex-shrink-0 w-4 items-start pt-4">
                   <div className="w-3 h-3 rounded-full bg-blue-500 border-2 border-white shadow" />
                 </div>
 

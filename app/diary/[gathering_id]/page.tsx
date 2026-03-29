@@ -55,29 +55,29 @@ export default function DiaryDetailPage({
       <PageHeader breadcrumb="日记" title={gathering.title} />
 
       {/* 顶部导航 - 在 indigo banner 区域内，两端布局 */}
-      <div className="px-6 pb-3 flex items-center justify-between">
-        <div className="flex items-center gap-2">
+      <div className="px-6 pb-3 flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2 min-w-0 flex-1">
           <Link
             href="/diary"
             className="flex items-center gap-1 text-sm text-white/90 hover:text-white
-                       bg-white/15 hover:bg-white/25 rounded-lg px-3 py-1.5 transition-all"
+                       bg-white/15 hover:bg-white/25 rounded-lg px-3 py-1.5 transition-all flex-shrink-0"
           >
             <ArrowLeft className="h-4 w-4" />
             返回日记
           </Link>
-          <span className="text-white/40 text-sm">·</span>
-          <p className="text-sm text-white/80">
+          <span className="text-white/40 text-sm hidden sm:inline">·</span>
+          <p className="text-sm text-white/80 truncate hidden sm:block">
             {format(new Date(gathering.held_at), "yyyy年M月d日 EEEE", { locale: zhCN })}
           </p>
         </div>
         <Link
           href={`/gatherings?highlight=${gathering_id}`}
-          className="inline-flex items-center gap-2 rounded-lg bg-white text-indigo-600 px-4 py-2.5
-                     text-sm font-medium shadow-sm
+          className="inline-flex items-center gap-1.5 rounded-lg bg-white text-indigo-600 px-3 py-2
+                     text-sm font-medium shadow-sm flex-shrink-0
                      hover:bg-indigo-50 active:bg-indigo-100 transition-colors duration-200"
         >
           <PartyPopper className="h-4 w-4" />
-          查看聚会
+          <span className="hidden sm:inline">查看聚会</span>
         </Link>
       </div>
 

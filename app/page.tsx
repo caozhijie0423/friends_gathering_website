@@ -32,7 +32,7 @@ export default function Home() {
   return (
     <>
       {/* 自定义 Header */}
-      <div className="px-6 pt-8 pb-6">
+      <div className="px-4 lg:px-6 pt-8 pb-6">
         <h1 className="text-white text-2xl font-bold">年度聚会统计</h1>
         <p className="text-white/60 text-sm mt-1">
           {format(new Date(), "yyyy年M月d日 EEEE", { locale: zhCN })}
@@ -53,7 +53,7 @@ export default function Home() {
         })()}
       </div>
 
-      <div className="px-6 pb-6 space-y-6">
+      <div className="px-4 lg:px-6 pb-6 space-y-6">
         {/* 年份选择 — pt-4 确保落在白色区域内 */}
         <div className="flex items-center justify-end gap-2 pt-4">
           <button

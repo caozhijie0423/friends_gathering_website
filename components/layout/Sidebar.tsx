@@ -3,7 +3,8 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
-import { Home, CalendarDays, BookOpen, Users } from "lucide-react"
+import { Home, CalendarDays, BookOpen, Users, Menu, X } from "lucide-react"
+import { useState } from "react"
 
 const navItems = [
   { href: "/", label: "首页", icon: Home, color: "text-indigo-500" },
@@ -12,11 +13,12 @@ const navItems = [
   { href: "/friends", label: "朋友", icon: Users, color: "text-orange-500" },
 ]
 
-export default function Sidebar() {
+// 桌面端侧边栏
+function DesktopSidebar() {
   const pathname = usePathname()
 
   return (
-    <aside className="fixed inset-y-0 left-0 z-40 w-64 p-4">
+    <aside className="fixed inset-y-0 left-0 z-40 w-64 p-4 hidden lg:block">
       <div className="bg-white rounded-2xl shadow-xl h-full flex flex-col overflow-hidden">
         {/* Navigation */}
         <nav className="flex flex-col gap-1 px-3 py-4 flex-grow">
@@ -50,5 +52,66 @@ export default function Sidebar() {
         </div>
       </div>
     </aside>
+  )
+}
+
+// 移动端底部导航
+function MobileBottomNav() {
+  const pathname = usePathname()
+
+  return (
+    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 lg:hidden safe-area-pb">
+      <div className="flex items-center justify-around h-16">
+        {navItems.map(({ href, label, icon: Icon, color }) => {
+          const isActive =
+            href === "/" ? pathname === "/" : pathname.startsWith(href)
+          return (
+            <Link
+              key={href}
+              href={href}
+              className={cn(
+                "flex flex-col items-center justify-center flex-1 h-full gap-0.5",
+                isActive ? "text-indigo-600" : "text-gray-400"
+              )}
+            >
+              <Icon className={cn("h-5 w-5", isActive ? color : "text-gray-400")} />
+              <span className="text-[10px] font-medium">{label}</span>
+            </Link>
+          )
+        })}
+      </div>
+    </nav>
+  )
+}
+
+// 移动端顶部标题栏
+function MobileHeader() {
+  const [menuOpen, setMenuOpen] = useState(false)
+  const pathname = usePathname()
+
+  const currentNav = navItems.find(item =>
+    item.href === "/" ? pathname === "/" : pathname.startsWith(item.href)
+  )
+
+  return (
+    <>
+      <header className="fixed top-0 left-0 right-0 z-40 bg-indigo-500 h-14 flex items-center justify-between px-4 lg:hidden">
+        <h1 className="text-white font-bold text-lg">
+          {currentNav?.label || "聚会日记"}
+        </h1>
+      </header>
+      {/* 占位元素，避免内容被顶部栏遮挡 */}
+      <div className="h-14 lg:hidden" />
+    </>
+  )
+}
+
+export default function Sidebar() {
+  return (
+    <>
+      <DesktopSidebar />
+      <MobileHeader />
+      <MobileBottomNav />
+    </>
   )
 }

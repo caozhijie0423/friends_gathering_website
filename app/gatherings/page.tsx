@@ -251,7 +251,7 @@ function GatheringsPage() {
 
       {/* 新建聚会 Dialog（全局，两处触发点共用） */}
       <Dialog open={isAddDialogOpen} onOpenChange={(open) => { if (!open) resetForm(); setIsAddDialogOpen(open) }}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="w-[95vw] max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>新建聚会</DialogTitle>
             <DialogDescription>填写聚会信息，创建新的聚会记录。</DialogDescription>
@@ -332,7 +332,7 @@ function GatheringsPage() {
                       {format(new Date(gathering.held_at), "yyyy年MM月dd日 EEEE", { locale: zhCN })}
                     </p>
                   </div>
-                  <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="flex gap-1">
                     <Button
                       variant="ghost"
                       size="icon"
@@ -418,7 +418,7 @@ function GatheringsPage() {
 
       {/* 编辑对话框 */}
       <Dialog open={isEditDialogOpen} onOpenChange={(open) => { if (!open) resetForm(); setIsEditDialogOpen(open) }}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="w-[95vw] max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>编辑聚会</DialogTitle>
             <DialogDescription>修改聚会信息。</DialogDescription>
@@ -570,7 +570,7 @@ function GatheringForm({
         </Popover>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor="location">地点</Label>
           <Input
