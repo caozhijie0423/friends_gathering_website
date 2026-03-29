@@ -72,9 +72,9 @@ export default function DiaryDetailPage({
         </div>
         <Link
           href={`/gatherings?highlight=${gathering_id}`}
-          className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5
-                     text-sm font-medium text-white shadow-sm
-                     hover:bg-blue-700 active:bg-blue-800 transition-colors duration-200"
+          className="inline-flex items-center gap-2 rounded-lg bg-white text-indigo-600 px-4 py-2.5
+                     text-sm font-medium shadow-sm
+                     hover:bg-indigo-50 active:bg-indigo-100 transition-colors duration-200"
         >
           <PartyPopper className="h-4 w-4" />
           查看聚会
