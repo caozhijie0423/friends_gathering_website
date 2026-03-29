@@ -291,7 +291,7 @@ function GatheringsPage() {
                          text-blue-600 border border-transparent
                          transition-all duration-200
                          hover:bg-blue-50 hover:shadow-sm
-                         active:bg-blue-600 active:text-white focus:outline-none focus:bg-blue-600 focus:text-white"
+                         active:bg-blue-600 active:text-white focus:outline-none"
             >
               <Plus className="h-4 w-4" />
               新建聚会
@@ -306,7 +306,7 @@ function GatheringsPage() {
                            text-blue-600 border border-transparent
                            transition-all duration-200
                            hover:bg-blue-50 hover:shadow-sm
-                           active:bg-blue-600 active:text-white focus:outline-none focus:bg-blue-600 focus:text-white"
+                           active:bg-blue-600 active:text-white focus:outline-none"
               >
                 <Plus className="h-4 w-4" />
                 新建聚会
