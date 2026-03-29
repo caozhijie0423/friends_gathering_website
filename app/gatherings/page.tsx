@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -33,7 +33,15 @@ import {
 } from "@/lib/db"
 import type { GatheringWithParticipants, Friend, Photo } from "@/types"
 
-export default function GatheringsPage() {
+export default function GatheringsPageWrapper() {
+  return (
+    <Suspense>
+      <GatheringsPage />
+    </Suspense>
+  )
+}
+
+function GatheringsPage() {
   const searchParams = useSearchParams()
   const [gatherings, setGatherings] = useState<GatheringWithParticipants[]>([])
   const [friends, setFriends] = useState<Friend[]>([])
