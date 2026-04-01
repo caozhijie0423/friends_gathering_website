@@ -80,9 +80,6 @@ export default function LineChartCard({
     },
     tooltip: {
       theme: "light",
-      background: "#fff",
-      borderColor: "#E5E7EB",
-      borderWidth: 1,
       style: {
         fontSize: "13px",
       },
@@ -92,9 +89,6 @@ export default function LineChartCard({
       },
       y: {
         formatter: (val: number) => `${val} ${unit}`,
-      },
-      marker: {
-        show: true,
       },
     },
     legend: { show: false },
