@@ -52,7 +52,7 @@ export default function LineChartCard({
       colors: ["#fff"],
       strokeColors: [color],
       strokeWidth: 3,
-      hover: { size: 7, strokeWidth: 3 },
+      hover: { size: 7 },
     },
     grid: {
       borderColor: "#E5E7EB",
