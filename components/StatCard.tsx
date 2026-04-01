@@ -8,6 +8,7 @@ interface StatCardProps {
   icon: LucideIcon
   iconBgColor?: string
   iconColor?: string
+  unit?: string
   subtext?: string
   change?: {
     value: number
@@ -22,6 +23,7 @@ export default function StatCard({
   icon: Icon,
   iconBgColor = "bg-indigo-50",
   iconColor = "text-indigo-500",
+  unit,
   subtext,
   change,
 }: StatCardProps) {
@@ -29,9 +31,12 @@ export default function StatCard({
     <div className="bg-white rounded-2xl shadow-md p-6">
       <div className="flex items-start justify-between">
         <div className="flex-1">
-          <p className="text-sm font-medium text-gray-500">{title}</p>
+          <p className="text-sm font-normal text-gray-400">{title}</p>
           <div className="mt-2 flex items-baseline gap-3">
-            <span className="text-3xl font-bold text-gray-900">{value}</span>
+            <div className="flex items-baseline gap-1">
+              <span className="text-3xl font-semibold text-gray-900">{value}</span>
+              {unit && <span className="text-lg font-medium text-gray-500">{unit}</span>}
+            </div>
             {change && (
               <span
                 className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
@@ -46,9 +51,9 @@ export default function StatCard({
             )}
           </div>
           {(subtext || change) && (
-            <p className="mt-1 text-sm text-gray-400">
+            <p className="mt-1 text-xs text-gray-400">
               {subtext}
-              {change && (
+              {change && change.label && (
                 <span className="ml-1 text-gray-400">{change.label}</span>
               )}
             </p>

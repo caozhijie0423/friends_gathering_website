@@ -33,11 +33,16 @@ export default function MemoryCard({
     if (isYesterday(originalDate)) return "就在昨天"
     if (isTomorrow(originalDate)) return "就在明天"
 
+    // 计算年份差
+    const yearDiff = today.getFullYear() - originalDate.getFullYear()
+
     if (isFuture) {
       if (daysDiff <= 7) return `还有 ${daysDiff} 天`
       if (daysDiff <= 30) return `还有 ${Math.floor(daysDiff / 7)} 周`
       return `还有 ${Math.floor(daysDiff / 30)} 个月`
     } else {
+      // 优先用年份表达
+      if (yearDiff >= 1) return `${yearDiff} 年前的时光`
       if (daysDiff <= 7) return `${daysDiff} 天前的回忆`
       if (daysDiff <= 30) return `${Math.floor(daysDiff / 7)} 周前的时光`
       return `${Math.floor(daysDiff / 30)} 个月前的记忆`

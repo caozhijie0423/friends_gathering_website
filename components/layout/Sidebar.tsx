@@ -45,17 +45,17 @@ function DesktopSidebar() {
 
         {/* 赞助商广告位 */}
         <div className="px-3 py-4 border-t border-gray-100">
-          <div className="rounded-xl border border-indigo-100 bg-indigo-50/60 px-3 py-3">
+          <div className="rounded-xl bg-gradient-to-br from-amber-300 to-orange-400 px-3 py-3 shadow-sm">
             <div className="flex items-start gap-2 mb-3">
-              <div className="mt-0.5 w-6 h-6 rounded-md bg-indigo-500 flex items-center justify-center flex-shrink-0">
+              <div className="mt-0.5 w-6 h-6 rounded-md bg-white/20 flex items-center justify-center flex-shrink-0">
                 <Zap className="w-3.5 h-3.5 text-white" />
               </div>
               <div>
-                <p className="text-xs font-semibold text-gray-800 leading-tight">赞助商空缺中</p>
-                <p className="text-[11px] text-gray-500 mt-0.5 leading-tight">支持这个小项目的成长</p>
+                <p className="text-xs font-semibold text-white leading-tight">赞助商空缺中</p>
+                <p className="text-[11px] text-white/80 mt-0.5 leading-tight">支持这个小项目的成长</p>
               </div>
             </div>
-            <button className="w-full rounded-lg bg-indigo-500 py-1.5 text-xs font-semibold text-white hover:bg-indigo-600 transition-colors">
+            <button className="w-full rounded-lg bg-white py-1.5 text-xs font-semibold text-orange-500 hover:bg-orange-50 transition-colors">
               报名
             </button>
           </div>

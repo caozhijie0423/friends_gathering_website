@@ -75,14 +75,15 @@ export default function Home() {
           <StatCard
             title="距上次聚会"
             value={daysSinceLast}
+            unit="天"
             icon={Flame}
             iconBgColor="bg-amber-50"
             iconColor="text-amber-500"
             subtext={
               mostRecent
-                ? `上次：${format(new Date(mostRecent.held_at), "yyyy年M月d日", {
+                ? format(new Date(mostRecent.held_at), "yyyy年M月d日", {
                     locale: zhCN,
-                  })}`
+                  })
                 : "暂无聚会记录"
             }
           />
@@ -97,7 +98,7 @@ export default function Home() {
               lastYearCount > 0
                 ? {
                     value: yearlyCount - lastYearCount,
-                    label: "次",
+                    label: "",
                     isPositive: yearlyCount >= lastYearCount,
                   }
                 : undefined
