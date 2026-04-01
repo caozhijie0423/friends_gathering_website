@@ -129,3 +129,29 @@ export async function deleteGathering(id: string): Promise<void> {
 
   if (error) throw new Error(error.message)
 }
+
+// 获取最近的一次聚会
+export async function getMostRecentGathering(): Promise<GatheringWithParticipants | null> {
+  const { data, error } = await supabase
+    .from("gatherings")
+    .select(`
+      *,
+      participants:gathering_participants(
+        friend:friends(*)
+      ),
+      photos(*)
+    `)
+    .order("held_at", { ascending: false })
+    .limit(1)
+    .single()
+
+  if (error) {
+    if (error.code === "PGRST116") return null // 没有记录
+    throw new Error(error.message)
+  }
+
+  return {
+    ...data,
+    participants: data.participants.map((p: any) => p.friend),
+  }
+}
