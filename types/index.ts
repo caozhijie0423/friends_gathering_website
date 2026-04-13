@@ -11,7 +11,7 @@ export type Gathering = {
   title: string
   held_at: string
   location: string
-  restaurant?: string | null
+  cuisine?: string | null
   drinks: string[]
   notes?: string | null
   created_at: string
@@ -51,7 +51,7 @@ export type CreateGatheringInput = {
   title: string
   held_at: string
   location: string
-  restaurant?: string
+  cuisine?: string
   drinks?: string[]
   notes?: string
   participant_ids?: string[]

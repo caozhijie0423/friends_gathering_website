@@ -60,7 +60,7 @@ function GatheringsPage() {
     title: "",
     held_at: new Date(),
     location: "",
-    restaurant: "",
+    cuisine: "",
     drinks: "",
     notes: "",
     participant_ids: [] as string[],
@@ -111,7 +111,7 @@ function GatheringsPage() {
       title: "",
       held_at: new Date(),
       location: "",
-      restaurant: "",
+      cuisine: "",
       drinks: "",
       notes: "",
       participant_ids: [],
@@ -124,11 +124,15 @@ function GatheringsPage() {
   // 打开编辑对话框 — Step 4
   function openEditDialog(gathering: GatheringWithParticipants) {
     setEditingGathering(gathering)
+    // 解析日期字符串为本地日期，避免时区偏移
+    const datePart = gathering.held_at.split("T")[0]
+    const [year, month, day] = datePart.split("-").map(Number)
+    const localDate = new Date(year, month - 1, day)
     setFormData({
       title: gathering.title,
-      held_at: new Date(gathering.held_at),
+      held_at: localDate,
       location: gathering.location || "",
-      restaurant: gathering.restaurant || "",
+      cuisine: gathering.cuisine || "",
       drinks: gathering.drinks?.join(", ") || "",
       notes: gathering.notes || "",
       participant_ids: gathering.participants.map((p) => p.id),
@@ -150,9 +154,9 @@ function GatheringsPage() {
     try {
       const gathering = await createGathering({
         title: formData.title,
-        held_at: formData.held_at.toISOString(),
+        held_at: format(formData.held_at, "yyyy-MM-dd"),
         location: formData.location || "",
-        restaurant: formData.restaurant || undefined,
+        cuisine: formData.cuisine || undefined,
         drinks: formData.drinks ? formData.drinks.split(",").map((d) => d.trim()).filter(Boolean) : undefined,
         notes: formData.notes || undefined,
         participant_ids: formData.participant_ids,
@@ -176,9 +180,9 @@ function GatheringsPage() {
     try {
       await updateGathering(editingGathering.id, {
         title: formData.title,
-        held_at: formData.held_at.toISOString(),
+        held_at: format(formData.held_at, "yyyy-MM-dd"),
         location: formData.location || "",
-        restaurant: formData.restaurant || undefined,
+        cuisine: formData.cuisine || undefined,
         drinks: formData.drinks ? formData.drinks.split(",").map((d) => d.trim()).filter(Boolean) : undefined,
         notes: formData.notes || undefined,
         participant_ids: formData.participant_ids,
@@ -329,7 +333,13 @@ function GatheringsPage() {
                   <div>
                     <CardTitle className="text-lg">{gathering.title}</CardTitle>
                     <p className="text-sm text-gray-500 mt-1">
-                      {format(new Date(gathering.held_at), "yyyy年MM月dd日 EEEE", { locale: zhCN })}
+                      {(() => {
+                        // 处理 ISO 格式或 yyyy-MM-dd 格式
+                        const datePart = gathering.held_at.split("T")[0]
+                        const [year, month, day] = datePart.split("-").map(Number)
+                        const localDate = new Date(year, month - 1, day)
+                        return format(localDate, "yyyy年MM月dd日 EEEE", { locale: zhCN })
+                      })()}
                     </p>
                   </div>
                   <div className="flex gap-1">
@@ -359,10 +369,10 @@ function GatheringsPage() {
                     <span className="text-gray-600">{gathering.location}</span>
                   </div>
                 )}
-                {gathering.restaurant && (
+                {gathering.cuisine && (
                   <div className="flex items-center gap-2 text-sm">
                     <Utensils className="h-4 w-4 text-gray-400" />
-                    <span className="text-gray-600">{gathering.restaurant}</span>
+                    <span className="text-gray-600">{gathering.cuisine}</span>
                   </div>
                 )}
                 {gathering.drinks && gathering.drinks.length > 0 && (
@@ -499,7 +509,7 @@ function GatheringForm({
     title: string
     held_at: Date
     location: string
-    restaurant: string
+    cuisine: string
     drinks: string
     notes: string
     participant_ids: string[]
@@ -581,12 +591,12 @@ function GatheringForm({
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="restaurant">餐厅</Label>
+          <Label htmlFor="cuisine">菜系</Label>
           <Input
-            id="restaurant"
-            placeholder="餐厅名称"
-            value={formData.restaurant}
-            onChange={(e) => setFormData((prev) => ({ ...prev, restaurant: e.target.value }))}
+            id="cuisine"
+            placeholder="菜系（如：川菜、日料、火锅）"
+            value={formData.cuisine}
+            onChange={(e) => setFormData((prev) => ({ ...prev, cuisine: e.target.value }))}
           />
         </div>
       </div>

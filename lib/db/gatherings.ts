@@ -22,6 +22,7 @@ export async function getGatherings(): Promise<GatheringWithParticipants[]> {
 
   return (data ?? []).map((g) => ({
     ...g,
+    cuisine: g.restaurant, // 映射 restaurant -> cuisine
     participants: g.participants.map((p: any) => p.friend),
   }))
 }
@@ -43,6 +44,7 @@ export async function getGathering(id: string): Promise<GatheringWithParticipant
 
   return {
     ...data,
+    cuisine: data.restaurant, // 映射 restaurant -> cuisine
     participants: data.participants.map((p: any) => p.friend),
   }
 }
@@ -50,16 +52,24 @@ export async function getGathering(id: string): Promise<GatheringWithParticipant
 export async function createGathering(
   input: CreateGatheringInput
 ): Promise<Gathering> {
-  const { participant_ids, ...gatheringData } = input
+  const { participant_ids, cuisine, ...gatheringData } = input
+  // 映射 cuisine -> restaurant 以兼容数据库列名
+  const dbData = { ...gatheringData, restaurant: cuisine }
 
   // 1. 创建聚会
   const { data: gathering, error } = await supabase
     .from("gatherings")
-    .insert(gatheringData)
+    .insert(dbData)
     .select()
     .single()
 
   if (error) throw new Error(error.message)
+
+  // 返回时映射 restaurant -> cuisine
+  const result: Gathering = {
+    ...gathering,
+    cuisine: gathering.restaurant,
+  }
 
   // 2. 添加参与人
   if (participant_ids && participant_ids.length > 0) {
@@ -79,24 +89,32 @@ export async function createGathering(
     .from("diary_entries")
     .insert({ gathering_id: gathering.id })
 
-  return gathering
+  return result
 }
 
 export async function updateGathering(
   id: string,
   input: UpdateGatheringInput
 ): Promise<Gathering> {
-  const { participant_ids, ...gatheringData } = input
+  const { participant_ids, cuisine, ...gatheringData } = input
+  // 映射 cuisine -> restaurant 以兼容数据库列名
+  const dbData = { ...gatheringData, ...(cuisine !== undefined && { restaurant: cuisine }) }
 
   // 1. 更新聚会基本信息
   const { data: gathering, error } = await supabase
     .from("gatherings")
-    .update(gatheringData)
+    .update(dbData)
     .eq("id", id)
     .select()
     .single()
 
   if (error) throw new Error(error.message)
+
+  // 返回时映射 restaurant -> cuisine
+  const result: Gathering = {
+    ...gathering,
+    cuisine: gathering.restaurant,
+  }
 
   // 2. 更新参与人（先删后插）
   if (participant_ids !== undefined) {
@@ -118,7 +136,7 @@ export async function updateGathering(
     }
   }
 
-  return gathering
+  return result
 }
 
 export async function deleteGathering(id: string): Promise<void> {
@@ -152,6 +170,7 @@ export async function getMostRecentGathering(): Promise<GatheringWithParticipant
 
   return {
     ...data,
+    cuisine: data.restaurant, // 映射 restaurant -> cuisine
     participants: data.participants.map((p: any) => p.friend),
   }
 }
