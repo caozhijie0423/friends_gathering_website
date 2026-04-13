@@ -100,12 +100,13 @@ export default function MemoryCard({
           </div>
 
           {/* 地点 */}
-          {gathering.location && (
+          {(gathering.location || gathering.cuisine) && (
             <div className="flex items-center gap-2 text-gray-500 mb-3">
               <MapPin className="w-4 h-4 text-amber-500" />
               <span className="text-sm">
                 {gathering.location}
-                {gathering.restaurant && ` · ${gathering.restaurant}`}
+                {gathering.location && gathering.cuisine && " · "}
+                {gathering.cuisine}
               </span>
             </div>
           )}
