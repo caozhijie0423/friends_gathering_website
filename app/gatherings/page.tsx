@@ -196,12 +196,12 @@ function GatheringsPage() {
         await uploadPhoto(editingGathering.id, file)
       }
       setSaveSuccess(true)
-      loadData()
-      setTimeout(() => {
+      setTimeout(async () => {
         setIsEditDialogOpen(false)
         setEditingGathering(null)
         resetForm()
         setSaveSuccess(false)
+        await loadData()
       }, 1500)
     } catch (error) {
       console.error("更新聚会失败:", error)
